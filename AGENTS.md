@@ -138,13 +138,23 @@ app/
 
 ---
 
-## Frontend and UX
+## Frontend and UX (RALLY Brand & Color Theme)
 
-* **Mobile-First:** Both players booking/queuing on phones and court caretakers tapping **"1-Tap Block"** or **"Promote Next in Queue"** on-site use mobile screens. Every interactive slot button must have a minimum `44x44px` touch target.
-* **Portal 1 (Player Matrix):** Visual hourly grid per court (`Emerald Green` = Available for Instant Booking, `Amber` = Booked — Tap to Join Waitlist Queue with current queue badge, `Slate/Gray` = Walk-In Blocked). Sticky bottom bar for quick name + phone submission.
-* **Portal 2 (Court Owner Companion):** Zero clutter. Defaults directly to **Today's Court Grid** with 1-tap `Block Walk-In` on empty slots, 1-tap `Promote Next in Queue` when waitlisted players are waiting on an open slot, and 1-tap `Check In` / `Mark No-Show` on booked slots.
+> **Design Source of Truth:** Always follow [docs/rally_color_theme_rationale.md](./docs/rally_color_theme_rationale.md) for the official **RALLY** color palette, contrast rules, and component treatments.
+
+* **RALLY Color Palette (Tailwind Theme Tokens):**
+  * **Deep Forest Green (`#173F32` / `rally-forest`):** Primary brand foundation (~60% visual anchor) — navigation bar, footer, dark hero headers, major headings on light backgrounds, and dark text on lime buttons.
+  * **Court Green (`#24764E` / `rally-court`):** Secondary interactive & availability green — `"Available"` slot status indicators, active nav states, secondary buttons, and icons.
+  * **Electric Lime (`#C8F169` / `rally-lime`):** High-energy accent & CTA (~10% share) — primary `"Book a Court"` / `"Confirm Court Booking"` buttons, currently **selected** date/time slots, and key action badges. **Always pair with dark text (`#173F32` or `#252B28`) for WCAG contrast; never use white text on lime.**
+  * **Warm Ivory (`#F4F1E7` / `rally-ivory`):** Main page canvas (~30% share) — comfortable warm off-white page and section background behind cards.
+  * **Soft White (`#FFFFFF` / `rally-surface`):** Card surfaces — court cards, booking forms, slot grid containers, queue drawers, modals, and dashboard panels.
+  * **Charcoal (`#252B28` / `rally-charcoal`):** Main body text, form labels, and supporting details on light surfaces.
+* **Status Semantics & Accessibility:**
+  * Never communicate slot status by color alone; always pair colors with explicit text labels or icons (`"Available"`, `"Selected"`, `"Booked · Join Queue (#N)"`, `"Walk-In Blocked"`).
+  * Every interactive slot button must have a minimum `44x44px` touch target and visible hover, focus, selected, and disabled states.
+* **Portal 1 (Player Matrix):** Warm Ivory (`#F4F1E7`) page canvas with Deep Forest Green (`#173F32`) header and Soft White (`#FFFFFF`) court cards. Visual hourly grid per court (`Court Green #24764E` = `"Available"`, `Electric Lime #C8F169` with `#173F32` text = `"Selected"`, `Amber` = `"Booked · Tap to Join Waitlist Queue"` with queue count badge, `Muted Gray` = `"Unavailable / Walk-In Blocked"`). Sticky bottom bar with Electric Lime CTA for quick name + phone submission.
+* **Portal 2 (Court Owner Companion):** Zero clutter. Defaults directly to **Today's Court Grid** with 1-tap `Block Walk-In` on empty slots, 1-tap `Promote Next in Queue` (highlighted with Electric Lime `#C8F169` CTA when waitlisted players are waiting on an open slot), and 1-tap `Check In` / `Mark No-Show` on booked slots.
 * **Live Updates:** Use `wire:poll.8s` on the public slot matrix and owner daily agenda so newly booked, waitlisted, promoted, or walk-in-blocked slots update automatically without page refresh.
-* **Styling:** Tailwind CSS utilities only. High-contrast athletic palette (Deep Slate navy headers, Court Emerald accents for Pickleball/Badminton availability, Amber for waitlist queues).
 
 ---
 

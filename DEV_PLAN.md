@@ -2,6 +2,7 @@
 
 > **Source of Truth:** Always follow [AGENTS.md](./AGENTS.md) and [CLAUDE.md](./CLAUDE.md) for business rules, slot concurrency invariants, queuing mechanics, and architectural constraints.  
 > **Reference System Plan:** See [docs/Court_Booking_Platform_System_Plan.md](./docs/Court_Booking_Platform_System_Plan.md) for stakeholder context.  
+> **UI/UX & Color Theme Specification:** Always follow [docs/rally_color_theme_rationale.md](./docs/rally_color_theme_rationale.md) (**RALLY** palette: Deep Forest Green `#173F32`, Court Green `#24764E`, Electric Lime `#C8F169`, Warm Ivory `#F4F1E7`, Soft White `#FFFFFF`, Charcoal `#252B28`).  
 > **Completion Gate (Every Milestone):** Run `php artisan test` and `vendor/bin/pint` (plus `npm run build` when frontend assets change) before marking any milestone complete.
 
 ---
@@ -91,9 +92,17 @@ vendor/bin/pint
 - [ ] **Audit Logging Service:**
   - [ ] Build `app/Services/AuditLogger.php` recording `user_id`, `venue_id`, `action`, `subject`, `old_values`, and `new_values`
 
-### Frontend Tasks
-- [ ] Responsive staff login page (`resources/views/auth/login.blade.php`)
-- [ ] Shared staff layout (`resources/views/components/layouts/staff.blade.php`) with role badge, venue badge (for Court Owners), and quick switch to the Public Booking Page
+### Frontend Tasks (RALLY Design System Foundation)
+- [ ] Configure **RALLY** Tailwind CSS theme tokens in `resources/css/app.css` per [docs/rally_color_theme_rationale.md](./docs/rally_color_theme_rationale.md):
+  - `rally-forest` (`#173F32` — Deep Forest Green: nav, footer, hero headers, dark text on lime)
+  - `rally-court` (`#24764E` — Court Green: secondary buttons, active links, `"Available"` status)
+  - `rally-lime` (`#C8F169` — Electric Lime: primary CTAs, selected date/time slots, badges — always with `#173F32`/`#252B28` dark text)
+  - `rally-ivory` (`#F4F1E7` — Warm Ivory: main page canvas)
+  - `rally-surface` (`#FFFFFF` — Soft White: court cards, forms, panels, drawers)
+  - `rally-charcoal` (`#252B28` — Charcoal: readable body text & form labels)
+- [ ] Public guest layout (`resources/views/components/layouts/app.blade.php`) with Deep Forest Green (`#173F32`) navbar/footer and Warm Ivory (`#F4F1E7`) page canvas
+- [ ] Responsive staff login page (`resources/views/auth/login.blade.php`) styled with the RALLY palette
+- [ ] Shared staff layout (`resources/views/components/layouts/staff.blade.php`) with Deep Forest Green header, Electric Lime active badges, role/venue badge, and quick switch to the Public Booking Page
 
 ### Tests & Verification
 - [ ] Feature test: Guests are redirected to `/login` on `/owner` and `/admin`
@@ -185,10 +194,14 @@ vendor/bin/pint
 - [ ] **`VenueDirectory` (`/`):**
   - [ ] Mobile-first venue cards with sport filter (`All`, `Pickleball`, `Badminton`), search by name/location, surface badges, court counts, and operating hours
 - [ ] **`VenueSlotBooking` (`/venues/{venue:slug}`):**
-  - [ ] Date picker strip + sport filter + interactive hourly court slot matrix (`Available` emerald green, `Booked — Join Queue` amber/slate with queue count badge e.g. `2 in queue`, `Walk-In Blocked` slate) with `wire:poll.8s`
+  - [ ] Date picker strip + sport filter + interactive hourly court slot matrix on Soft White (`#FFFFFF`) court cards over a Warm Ivory (`#F4F1E7`) canvas with `wire:poll.8s`:
+    - **Available:** Court Green (`#24764E`) indicator paired with explicit `"Available"` label
+    - **Selected:** Electric Lime (`#C8F169`) background with Deep Forest Green (`#173F32`) text and `"Selected"` label
+    - **Booked (Join Waitlist Queue):** Amber indicator paired with `"Booked · Join Queue (#N)"` label
+    - **Unavailable / Walk-In Blocked:** Muted gray paired with `"Unavailable"` / `"Walk-In Blocked"` label
   - [ ] **Mode A — Instant Slot Booking (Available Slots):**
     - Select one or more available 1-hour slots (up to `venue->max_daily_hours_per_player`)
-    - Enter Player Name & Mobile Phone in the sticky bottom bar -> clicking **"Confirm Court Booking"** calls `SlotBookingService::bookAvailableSlots()` and redirects directly to the confirmed `DigitalBookingPass`
+    - Enter Player Name & Mobile Phone in the sticky bottom bar -> clicking the Electric Lime (`#C8F169`) **"Confirm Court Booking"** CTA calls `SlotBookingService::bookAvailableSlots()` and redirects directly to the confirmed `DigitalBookingPass`
   - [ ] **Mode B — Join Slot Waitlist Queue (Booked Slots):**
     - Tapping an already-booked slot opens a quick **"Join Waitlist Queue for [Court] at [Time]"** drawer showing current queue length (`#N in line`)
     - Enter Player Name & Mobile Phone -> clicking **"Join Waitlist Queue"** calls `SlotBookingService::joinSlotWaitlist()` and redirects to the `DigitalBookingPass` showing their live queue rank
